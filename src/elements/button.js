@@ -1,5 +1,9 @@
-export default class Button{
+import BaseElement from './baseElement';
+
+export default class Button extends BaseElement{
   constructor(parent, text) {
+    super();
+    if (!this.isDomElement(parent)) { throw('parrent is not DomElement')};
     this.parent = parent;
     this.element = document.createElement("button");
     this.element.innerText = text;
@@ -8,9 +12,5 @@ export default class Button{
 
   addAction(action){
     this.element.addEventListener("click", action);
-  }
-
-  render(){
-    this.parent.appendChild(this.element);
   }
 }

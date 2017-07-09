@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -76,11 +76,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _childWrapper = __webpack_require__(2);
+var _childWrapper = __webpack_require__(1);
 
 var _childWrapper2 = _interopRequireDefault(_childWrapper);
 
-var _button = __webpack_require__(3);
+var _button = __webpack_require__(2);
 
 var _button2 = _interopRequireDefault(_button);
 
@@ -97,23 +97,23 @@ var Node = function () {
     _classCallCheck(this, Node);
 
     this.parent = parent;
-    this.element = document.createElement('div');
+    this.element = document.createElement('li');
+
+    this.deleteButton = new _button2.default(this.element, "delete");
+    this.addChildButton = new _button2.default(this.element, "add child");
+    this.title = new _title2.default(this.element);
     this.childWrapper = new _childWrapper2.default(this.element);
 
-    this.deleteButton = new _button2.default(this.element);
-    this.deleteButton.addAction(this.deleteNode);
+    this.deleteButton.addAction(this.delete.bind(this));
+    this.addChildButton.addAction(this.childWrapper.addChild.bind(this.childWrapper));
 
-    this.addChildButton = new _button2.default(this.element);
-    // this.addChildButton.addAction(this.childWrapper.addChild);
-
-    this.title = new _title2.default(this.element);
     this.render();
   }
 
   _createClass(Node, [{
-    key: 'deleteNode',
-    value: function deleteNode() {
-      this.element.remove();
+    key: 'delete',
+    value: function _delete() {
+      this.parent.removeChild(this.element);
     }
   }, {
     key: 'render',
@@ -129,23 +129,6 @@ exports.default = Node;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _node = __webpack_require__(0);
-
-var _node2 = _interopRequireDefault(_node);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var root = document.getElementById('root');
-var node = new _node2.default(root);
-// node.render();
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -178,7 +161,7 @@ var ChildWrapper = function () {
   _createClass(ChildWrapper, [{
     key: 'addChild',
     value: function addChild() {
-      this.childList.pust(new _node2.default(this.element));
+      this.childList.push(new _node2.default(this.element));
     }
   }, {
     key: 'render',
@@ -193,7 +176,7 @@ var ChildWrapper = function () {
 exports.default = ChildWrapper;
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -219,8 +202,7 @@ var Button = function () {
 
   _createClass(Button, [{
     key: "addAction",
-    value: function addAction(action, text) {
-      this.element.innerHTML = text;
+    value: function addAction(action) {
       this.element.addEventListener("click", action);
     }
   }, {
@@ -234,6 +216,40 @@ var Button = function () {
 }();
 
 exports.default = Button;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _node = __webpack_require__(0);
+
+var _node2 = _interopRequireDefault(_node);
+
+var _button = __webpack_require__(2);
+
+var _button2 = _interopRequireDefault(_button);
+
+var _childWrapper = __webpack_require__(1);
+
+var _childWrapper2 = _interopRequireDefault(_childWrapper);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(function () {
+  var root = document.getElementById('root');
+  var nodeWrapper = new _childWrapper2.default(root);
+  var buttonWrapper = document.getElementById('buttonWrapper');
+  var createButton = new _button2.default(buttonWrapper, "create");
+  var saveButton = new _button2.default(buttonWrapper, "save");
+  var loadButton = new _button2.default(buttonWrapper, "load");
+  createButton.addAction(nodeWrapper.addChild.bind(nodeWrapper));
+  saveButton.addAction(function () {
+    console.log(nodeWrapper);
+  });
+})();
 
 /***/ }),
 /* 4 */
@@ -258,11 +274,16 @@ var Title = function () {
 
     this.parent = parent;
     this.element = document.createElement('input');
-    this.element.innerText = text;
+    this.element.value = text;
     this.render();
   }
 
   _createClass(Title, [{
+    key: "getText",
+    value: function getText() {
+      return this.element.value;
+    }
+  }, {
     key: "render",
     value: function render() {
       this.parent.appendChild(this.element);
