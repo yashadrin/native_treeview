@@ -1,7 +1,7 @@
 export default class StorageService{
   constructor(){
     this.key = "TREE_VIEW_KEY";
-    if (!window.localStorage) { throw('localStorage is not support')}
+    if (!window.localStorage) { throw('localStorage is not supported')}
   }
 
   save(json){

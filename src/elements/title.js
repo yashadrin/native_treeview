@@ -2,10 +2,7 @@ import BaseElement from './baseElement';
 
 export default class Title extends BaseElement{
   constructor(parent, text ="child"){
-    super();
-    if (!this.isDomElement(parent)) { throw('parrent is not DomElement')};
-    this.parent = parent;
-    this.element = document.createElement('input');
+    super(parent, "input");
     this.element.value = text;
     this.render();
   }

@@ -1,4 +1,10 @@
 export default class BaseElement{
+  constructor(parent, type){
+    if (!this.isDomElement(parent)) { throw('parrent is not DomElement')};
+    this.parent = parent;
+    this.element = document.createElement(type);
+  }
+  
   delete(){
     try {
       this.parent.removeChild(this.element);
@@ -17,5 +23,13 @@ export default class BaseElement{
 
   isDomElement(element){
     return element.nodeName  ? true : false;
+  }
+
+  getElement(){
+    return this.element;
+  }
+
+  clear() {
+    this.element.innerHTML = '';
   }
 }
