@@ -1,18 +1,15 @@
 import NodeElement from '../elements/nodeElement';
-import NodeWrapper from './nodeWrapper';
+import BaseNode from './baseNode';
 
-export default class Node{
-  constructor(parent, name = "child") {
-    this.children = [];
+export default class Node extends BaseNode{
+  constructor(parent, name) {
+    super();
+    if (!parent) throw('parent element is undefined');
     this.parent = parent;
     this.element  = new NodeElement(parent.getDomElement(), name);
     
     this.element.setDeleteButtonAction(this.delete.bind(this));
     this.element.setCreateChildButtonAction(this.addChild.bind(this));
-  }
-
-  getDomElement(){
-    return this.element.getElement();
   }
 
   delete(){
@@ -30,26 +27,13 @@ export default class Node{
     this.children.push(new Node(this));
   }
 
-  deleteChild(child) {
-    let index = this.children.indexOf(child);
-    if (index !== -1) {
-      this.children.splice(index, 1);
-    }
-  }
-
-  getState(){
-    let state = [];
-    for(let child of this.children) {
-      state.push({name: child.getName(), children: child.getState()})
-    }
-    return state;
-  }
-
   addChildren(children){
-    for (let child of children) {
-      let node = new Node(this, child.name);
-      node.addChildren(child.children);
-      this.children.push(node);      
+    if (Array.isArray(children)){
+      for (let child of children) {
+        let node = new Node(this, child.name);
+        node.addChildren(child.children);
+        this.children.push(node);
+      }
     }
   }
 

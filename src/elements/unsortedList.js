@@ -1,4 +1,3 @@
-import NodeElement from './nodeElement';
 import BaseElement from './baseElement';
 
 export default class UnsortedList extends BaseElement{
